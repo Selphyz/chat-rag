@@ -1,9 +1,29 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(mkdir:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(DATABASE_HOST=localhost npm run migration:run:*)",
+      "Bash(docker exec:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aplay .claude/output.wav 2>/dev/null || paplay .claude/output.wav 2>/dev/null || ffplay -nodisp -autoexit .claude/output.wav 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
   }
 }
