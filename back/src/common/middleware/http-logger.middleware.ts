@@ -9,9 +9,10 @@ export class HttpLoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const startTime = Date.now();
     const { method, originalUrl, ip, headers } = req;
+    const logger = this.logger;
 
     // Log incoming request
-    this.logger.debug(
+    logger.debug(
       `Incoming ${method} request`,
       'HttpLogger',
       {
@@ -31,7 +32,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       // Log response
       const logLevel = statusCode >= 400 ? 'warn' : 'info';
       const logFn =
-        logLevel === 'warn' ? this.logger.warn.bind(this.logger) : this.logger.info.bind(this.logger);
+        logLevel === 'warn' ? logger.warn.bind(logger) : logger.info.bind(logger);
 
       logFn(`${method} ${originalUrl}`, 'HttpLogger', {
         method,
@@ -43,7 +44,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       });
 
       return originalSend.call(this, data);
-    }.bind(this);
+    };
 
     next();
   }

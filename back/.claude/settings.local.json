@@ -8,7 +8,8 @@
       "Bash(DATABASE_HOST=localhost npm run migration:run:*)",
       "Bash(docker exec:*)",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(netstat:*)"
     ],
     "deny": [],
     "ask": []
@@ -21,6 +22,17 @@
           {
             "type": "command",
             "command": "aplay .claude/output.wav 2>/dev/null || paplay .claude/output.wav 2>/dev/null || ffplay -nodisp -autoexit .claude/output.wav 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aplay .claude/pause.wav 2>/dev/null || paplay .claude/pause.wav 2>/dev/null || ffplay -nodisp -autoexit .claude/pause.wav 2>/dev/null || true"
           }
         ]
       }

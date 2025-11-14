@@ -33,7 +33,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
           database: configService.get('database.name'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: configService.get('nodeEnv') === 'development',
-          logging: configService.get('nodeEnv') === 'development',
+          logging: false,
         };
       },
       inject: [ConfigService],

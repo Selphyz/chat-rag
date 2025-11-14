@@ -635,15 +635,6 @@ npm run migration:run
 npm run start:dev
 ```
 
-### Making Changes
-
-1. **Create feature branch:** `git checkout -b feature/new-feature`
-2. **Make changes** in appropriate module
-3. **Write tests** for new functionality
-4. **Run tests:** `npm test`
-5. **Build:** `npm run build`
-6. **Commit** with descriptive message
-
 ### Database Changes
 
 1. **Modify entity** or create new one
