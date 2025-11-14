@@ -9,7 +9,8 @@
       "Bash(docker exec:*)",
       "Bash(cat:*)",
       "Bash(curl:*)",
-      "Bash(netstat:*)"
+      "Bash(netstat:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

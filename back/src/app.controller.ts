@@ -8,6 +8,7 @@ import {
   ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { Public } from './modules/auth/decorators/public.decorator';
 
 @Controller()
 @ApiTags('Health')
@@ -17,12 +18,14 @@ export class AppController {
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
+  @Public()
   @Get()
   @ApiExcludeEndpoint()
   getHello(): string {
     return this.appService.getHello();
   }
 
+  @Public()
   @Get('health')
   @ApiOperation({
     summary: 'Get general health status',
@@ -58,6 +61,7 @@ export class AppController {
     };
   }
 
+  @Public()
   @Get('health/db')
   @ApiOperation({
     summary: 'Check database connectivity',

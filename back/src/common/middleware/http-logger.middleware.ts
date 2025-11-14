@@ -24,7 +24,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
     );
 
     // Capture response
-    const originalSend = res.send;
+    const originalSend = res.send.bind(res);
     res.send = function (data: any): Response {
       const statusCode = res.statusCode;
       const duration = Date.now() - startTime;
@@ -43,7 +43,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
         contentLength: res.getHeader('content-length'),
       });
 
-      return originalSend.call(this, data);
+      return originalSend(data);
     };
 
     next();
