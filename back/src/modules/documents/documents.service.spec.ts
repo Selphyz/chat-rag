@@ -83,8 +83,8 @@ describe('DocumentsService', () => {
         user: null,
       } as unknown as Document;
 
-      documentRepository.create.mockReturnValue(storedDocument);
-      documentRepository.save.mockResolvedValue(storedDocument);
+      documentRepository.create!.mockReturnValue(storedDocument);
+      documentRepository.save!.mockResolvedValue(storedDocument);
 
       jest.spyOn(Date, 'now').mockReturnValue(1700000000000);
 
@@ -109,8 +109,8 @@ describe('DocumentsService', () => {
     });
 
     it('should throw BadRequestException on persistence errors', async () => {
-      documentRepository.create.mockReturnValue({} as Document);
-      documentRepository.save.mockRejectedValue(new Error('db failure'));
+      documentRepository.create!.mockReturnValue({} as Document);
+      documentRepository.save!.mockRejectedValue(new Error('db failure'));
 
       await expect(
         service.uploadDocument(mockFile, 'user-1'),
@@ -138,7 +138,7 @@ describe('DocumentsService', () => {
 
       const fileBuffer = Buffer.from('pdf content');
 
-      documentRepository.findOne.mockResolvedValue(document);
+      documentRepository.findOne!.mockResolvedValue(document);
       mockFs.readFile.mockResolvedValue(fileBuffer);
       (pdfParser.parse as jest.Mock).mockResolvedValue('parsed pdf text');
 
@@ -151,7 +151,7 @@ describe('DocumentsService', () => {
 
   describe('findById', () => {
     it('should throw NotFoundException when missing', async () => {
-      documentRepository.findOne.mockResolvedValue(null);
+      documentRepository.findOne!.mockResolvedValue(null);
 
       await expect(service.findById('missing')).rejects.toThrow(
         NotFoundException,
@@ -177,7 +177,7 @@ describe('DocumentsService', () => {
         user: null,
       } as unknown as Document;
 
-      documentRepository.findOne.mockResolvedValue(document);
+      documentRepository.findOne!.mockResolvedValue(document);
 
       await service.delete(document.id, 'user-1');
 
@@ -188,7 +188,7 @@ describe('DocumentsService', () => {
     });
 
     it('should throw when document is not owned by user', async () => {
-      documentRepository.findOne.mockResolvedValue(null);
+      documentRepository.findOne!.mockResolvedValue(null);
 
       await expect(service.delete('doc-432', 'wrong-user')).rejects.toThrow(
         NotFoundException,

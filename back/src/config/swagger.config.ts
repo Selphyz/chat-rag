@@ -22,5 +22,8 @@ const buildConfig = () =>
     .build();
 
 export const createSwaggerDocument = (app: INestApplication) => {
-  return SwaggerModule.createDocument(app, buildConfig());
+  const document = SwaggerModule.createDocument(app, buildConfig());
+  // Update to OpenAPI 3.1.0
+  (document as any).openapi = '3.1.0';
+  return document;
 };

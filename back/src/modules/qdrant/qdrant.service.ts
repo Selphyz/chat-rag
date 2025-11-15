@@ -6,7 +6,43 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { QdrantClient } from '@qdrant/js-client-rest';
+
+interface QdrantClientInstance {
+  getCollections(): Promise<{ collections: { name: string }[] }>;
+  createCollection(
+    collectionName: string,
+    options: Record<string, any>,
+  ): Promise<void>;
+  upsert(
+    collectionName: string,
+    payload: Record<string, any>,
+  ): Promise<void>;
+  search(
+    collectionName: string,
+    payload: Record<string, any>,
+  ): Promise<Array<{ id: string | number; score: number; payload?: any }>>;
+  retrieve(
+    collectionName: string,
+    payload: Record<string, any>,
+  ): Promise<Array<Record<string, any>>>;
+  delete(
+    collectionName: string,
+    payload: Record<string, any>,
+  ): Promise<void>;
+  getCollection(collectionName: string): Promise<Record<string, any>>;
+  count(
+    collectionName: string,
+    payload: Record<string, any>,
+  ): Promise<{ count: number }>;
+}
+
+interface QdrantClientConstructor {
+  new (options: { url: string }): QdrantClientInstance;
+}
+
+const { QdrantClient } = require('@qdrant/js-client-rest') as {
+  QdrantClient: QdrantClientConstructor;
+};
 
 export interface VectorPoint {
   id: string;
@@ -23,7 +59,7 @@ export interface SearchResult {
 @Injectable()
 export class QdrantService implements OnModuleInit {
   private readonly logger = new Logger(QdrantService.name);
-  private readonly client: QdrantClient;
+  private readonly client: QdrantClientInstance;
   private readonly collectionName: string;
   private readonly vectorDimension: number;
 

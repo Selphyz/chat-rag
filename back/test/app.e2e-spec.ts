@@ -109,20 +109,20 @@ describe('Application (e2e)', () => {
       }
       return undefined;
     }),
-  } as unknown as ConfigService;
+  };
 
   const mockDataSource = {
     isInitialized: true,
     options: { type: 'postgres' },
     query: jest.fn().mockResolvedValue([1]),
-  } as unknown as DataSource;
+  };
 
   const mockOllamaService = {
     healthCheck: jest.fn().mockResolvedValue(true),
     listModels: jest.fn().mockResolvedValue(['llama3.2']),
     getModel: jest.fn().mockReturnValue('llama3.2'),
     getEmbeddingModel: jest.fn().mockReturnValue('nomic-embed-text'),
-  } as unknown as OllamaService;
+  };
 
   const mockQdrantService = {
     healthCheck: jest.fn().mockResolvedValue(true),
@@ -131,7 +131,7 @@ describe('Application (e2e)', () => {
       .fn()
       .mockResolvedValue({ status: 'green', vectors_count: 0 }),
     countVectors: jest.fn().mockResolvedValue(0),
-  } as unknown as QdrantService;
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -231,11 +231,11 @@ describe('Application (e2e)', () => {
       const res = new ServerResponse(req);
       const chunks: Buffer[] = [];
 
-      res.write = function (
+      res.write = ((
         chunk: any,
         encoding?: BufferEncoding | (() => void),
         callback?: () => void,
-      ) {
+      ) => {
         if (chunk) {
           const buffer = Buffer.isBuffer(chunk)
             ? chunk
@@ -253,13 +253,13 @@ describe('Application (e2e)', () => {
         }
 
         return true;
-      };
+      }) as typeof res.write;
 
-      res.end = function (
+      res.end = ((
         chunk?: any,
         encoding?: BufferEncoding | (() => void),
         callback?: () => void,
-      ) {
+      ) => {
         if (chunk) {
           const buffer = Buffer.isBuffer(chunk)
             ? chunk
@@ -298,7 +298,7 @@ describe('Application (e2e)', () => {
         });
 
         return res;
-      };
+      }) as typeof res.end;
 
       res.on('error', reject);
 

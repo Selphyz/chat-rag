@@ -33,6 +33,10 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
+# Install postgresql-client for wait logic
+RUN apk add --no-cache postgresql-client
+
+# Copy package files
 COPY package*.json ./
 RUN npm ci --omit=dev
 
@@ -40,4 +44,5 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+# Wait for postgres then start the app
+ENTRYPOINT ["sh", "-c", "until pg_isready -h ${DATABASE_HOST:-postgres} -p ${DATABASE_PORT:-5432} -U ${DATABASE_USER:-postgres} > /dev/null 2>&1; do echo 'Waiting for PostgreSQL...'; sleep 1; done; echo 'PostgreSQL is ready! Waiting additional time for full initialization...'; sleep 5; NODE_ENV=production node dist/main"]
