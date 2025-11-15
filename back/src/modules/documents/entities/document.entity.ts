@@ -49,7 +49,7 @@ export class Document {
   status: DocumentStatus;
 
   @Column('text', { nullable: true })
-  error: string;
+  error: string | null;
 
   @OneToMany(() => DocumentChunk, (chunk) => chunk.document, { cascade: true })
   chunks: DocumentChunk[];
@@ -58,7 +58,7 @@ export class Document {
   uploadedAt: Date;
 
   @Column({ name: 'processed_at', type: 'timestamp', nullable: true })
-  processedAt: Date;
+  processedAt: Date | null;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;

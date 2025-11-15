@@ -28,6 +28,8 @@
     "seed": "ts-node src/database/seeds/seed.ts"
   },
   "dependencies": {
+    "@langchain/community": "^1.0.3",
+    "@langchain/core": "^1.0.5",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -42,6 +44,7 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "langchain": "^1.0.4",
     "mammoth": "^1.11.0",
     "ollama": "^0.6.3",
     "passport": "^0.7.0",

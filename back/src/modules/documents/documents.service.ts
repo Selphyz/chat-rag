@@ -150,9 +150,16 @@ export class DocumentsService {
 
     if (status === DocumentStatus.PROCESSED) {
       updateData.processedAt = new Date();
+      updateData.error = null;
+    } else if (status === DocumentStatus.PROCESSING) {
+      updateData.processedAt = null;
+      updateData.error = null;
+    } else if (status === DocumentStatus.FAILED) {
+      updateData.processedAt = null;
+      updateData.error = error ?? 'Document processing failed';
     }
 
-    if (error) {
+    if (error && status !== DocumentStatus.FAILED) {
       updateData.error = error;
     }
 

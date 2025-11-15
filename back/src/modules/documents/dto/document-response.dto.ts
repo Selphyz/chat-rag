@@ -8,7 +8,8 @@ export class DocumentResponseDto {
   size: number;
   status: DocumentStatus;
   uploadedAt: Date;
-  processedAt?: Date;
-  error?: string;
+  processedAt?: Date | null;
+  error?: string | null;
   chunkCount?: number;
+  message?: string;
 }

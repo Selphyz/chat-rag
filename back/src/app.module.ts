@@ -19,6 +19,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { OllamaModule } from './modules/ollama/ollama.module';
 import { QdrantModule } from './modules/qdrant/qdrant.module';
+import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { QdrantModule } from './modules/qdrant/qdrant.module';
     DocumentsModule,
     OllamaModule,
     QdrantModule,
+    EmbeddingsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,10 @@ import {
   BadRequestException,
   Controller,
   Delete,
+  forwardRef,
   Get,
+  Inject,
+  Logger,
   Param,
   Post,
   UploadedFile,
@@ -16,6 +19,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '../auth/entities/user.entity';
 import { DocumentResponseDto } from './dto/document-response.dto';
 import { Document } from './entities/document.entity';
+import { EmbeddingsService } from '../embeddings/embeddings.service';
 
 const MAX_FILE_SIZE = parseInt(
   process.env.MAX_FILE_SIZE || '10485760',
@@ -25,7 +29,13 @@ const MAX_FILE_SIZE = parseInt(
 @ApiTags('Documents')
 @Controller('documents')
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) {}
+  private readonly logger = new Logger(DocumentsController.name);
+
+  constructor(
+    private readonly documentsService: DocumentsService,
+    @Inject(forwardRef(() => EmbeddingsService))
+    private readonly embeddingsService: EmbeddingsService,
+  ) {}
 
   @Post('upload')
   @ApiConsumes('multipart/form-data')
@@ -87,7 +97,20 @@ export class DocumentsController {
       user.id,
     );
 
-    return this.mapDocumentResponse(document);
+    this.embeddingsService
+      .processDocument(document.id)
+      .catch((error) => {
+        const message =
+          error instanceof Error ? error.message : String(error);
+        this.logger.error(
+          `Background processing failed for ${document.id}: ${message}`,
+        );
+      });
+
+    return {
+      ...this.mapDocumentResponse(document),
+      message: 'Document uploaded and processing started',
+    };
   }
 
   @Get()
@@ -117,8 +140,39 @@ export class DocumentsController {
     @Param('id') id: string,
     @CurrentUser() user: User,
   ): Promise<{ message: string }> {
+    const document = await this.documentsService.findById(id);
+
+    if (document.userId !== user.id) {
+      throw new BadRequestException('Access denied');
+    }
+
+    await this.embeddingsService.deleteDocumentEmbeddings(id);
     await this.documentsService.delete(id, user.id);
-    return { message: 'Document deleted successfully' };
+
+    return { message: 'Document and embeddings deleted successfully' };
+  }
+
+  @Post(':id/reprocess')
+  async reprocessDocument(
+    @Param('id') id: string,
+    @CurrentUser() user: User,
+  ): Promise<{ message: string }> {
+    const document = await this.documentsService.findById(id);
+
+    if (document.userId !== user.id) {
+      throw new BadRequestException('Access denied');
+    }
+
+    await this.embeddingsService.deleteDocumentEmbeddings(id);
+    this.embeddingsService.processDocument(id).catch((error) => {
+      const message =
+        error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `Reprocessing failed for ${id}: ${message}`,
+      );
+    });
+
+    return { message: 'Document reprocessing started' };
   }
 
   private mapDocumentResponse(document: Document): DocumentResponseDto {
@@ -132,7 +186,7 @@ export class DocumentsController {
       uploadedAt: document.uploadedAt,
       processedAt: document.processedAt,
       error: document.error,
-      chunkCount: document.chunks?.length || undefined,
+      chunkCount: document.chunks?.length ?? undefined,
     };
   }
 }

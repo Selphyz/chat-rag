@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Document } from './entities/document.entity';
 import { DocumentChunk } from './entities/document-chunk.entity';
@@ -8,9 +8,13 @@ import { PdfParser } from './parsers/pdf.parser';
 import { DocxParser } from './parsers/docx.parser';
 import { XlsxParser } from './parsers/xlsx.parser';
 import { TextParser } from './parsers/text.parser';
+import { EmbeddingsModule } from '../embeddings/embeddings.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Document, DocumentChunk])],
+  imports: [
+    TypeOrmModule.forFeature([Document, DocumentChunk]),
+    forwardRef(() => EmbeddingsModule),
+  ],
   controllers: [DocumentsController],
   providers: [DocumentsService, PdfParser, DocxParser, XlsxParser, TextParser],
   exports: [DocumentsService],
