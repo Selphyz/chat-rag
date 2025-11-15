@@ -1,8 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { LoggerService } from './common/logger/logger.service';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import {
+  SWAGGER_PATH,
+  createSwaggerDocument,
+} from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,32 +30,18 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // Setup Swagger/OpenAPI documentation
-  const config = new DocumentBuilder()
-    .setTitle('Chat RAG Backend API')
-    .setDescription(
-      'A Retrieval-Augmented Generation (RAG) chat application backend with document processing and vector search capabilities',
-    )
-    .setVersion('1.0.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'access-token',
-    )
-    .addTag('Auth', 'User authentication and authorization')
-    .addTag('Chat', 'Chat session and message management')
-    .addTag('Documents', 'Document upload and processing')
-    .addTag('Health', 'Health check endpoints')
-    .addTag('Qdrant', 'Qdrant vector diagnostics and utilities')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
+  const document = createSwaggerDocument(app);
+  SwaggerModule.setup(SWAGGER_PATH, app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       displayOperationId: false,
     },
   });
 
-  logger.info(`📚 Swagger documentation available at http://localhost:${port}/api/docs`, 'Bootstrap');
+  logger.info(
+    `📚 Swagger documentation available at http://localhost:${port}/${SWAGGER_PATH}`,
+    'Bootstrap',
+  );
 
   await app.listen(port);
   logger.info(`✅ Application is running on http://localhost:${port}`, 'Bootstrap');
