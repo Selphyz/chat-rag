@@ -176,216 +176,9 @@ Expected output:
 
 ---
 
-## 4. ESLint Configuration
+## 4. Environment Variables Setup
 
-### 4.1 Update `.eslintrc.json`
-
-```json
-{
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_" }
-    ],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-types": "off",
-    "react/jsx-key": "error",
-    "react/display-name": "warn",
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
-  }
-}
-```
-
-### 4.2 Add Lint Script
-
-Update `package.json`:
-
-```json
-{
-  "scripts": {
-    "lint": "eslint src --max-warnings 0",
-    "lint:fix": "eslint src --fix",
-    "type-check": "tsc --noEmit"
-  }
-}
-```
-
----
-
-## 5. Prettier Configuration
-
-### 5.1 Create `.prettierrc.json`
-
-```json
-{
-  "semi": true,
-  "trailingComma": "es5",
-  "singleQuote": true,
-  "printWidth": 100,
-  "tabWidth": 2,
-  "useTabs": false,
-  "arrowParens": "always",
-  "endOfLine": "lf"
-}
-```
-
-### 5.2 Create `.prettierignore`
-
-```
-node_modules
-.next
-dist
-build
-coverage
-out
-.env
-.env.local
-.env.*.local
-*.log
-```
-
----
-
-## 6. Project Folder Structure
-
-### 6.1 Create Directory Structure
-
-```bash
-# Create all necessary directories
-mkdir -p src/{
-  app,
-  components/{layouts,pages,common,forms},
-  hooks,
-  services/api,
-  types/api,
-  utils,
-  context,
-  constants,
-  styles,
-  lib
-}
-```
-
-### 6.2 Full Directory Tree
-
-```
-chat-rag-frontend/
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx              # Root layout
-│   │   ├── page.tsx                # Home page (redirect)
-│   │   ├── globals.css             # Global styles
-│   │   └── favicon.ico
-│   │
-│   ├── components/
-│   │   ├── layouts/
-│   │   │   ├── MainLayout.tsx      # Main app layout
-│   │   │   └── AuthLayout.tsx      # Auth pages layout
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── LoginPage.tsx
-│   │   │   ├── RegisterPage.tsx
-│   │   │   ├── ChatPage.tsx
-│   │   │   ├── DocumentsPage.tsx
-│   │   │   └── ProfilePage.tsx
-│   │   │
-│   │   ├── common/
-│   │   │   ├── Header.tsx
-│   │   │   ├── Sidebar.tsx
-│   │   │   ├── LoadingSpinner.tsx
-│   │   │   ├── Toast.tsx
-│   │   │   └── ConfirmDialog.tsx
-│   │   │
-│   │   └── forms/
-│   │       ├── LoginForm.tsx
-│   │       ├── RegisterForm.tsx
-│   │       └── DocumentUploadForm.tsx
-│   │
-│   ├── hooks/
-│   │   ├── useAuth.ts
-│   │   ├── useChat.ts
-│   │   ├── useDocuments.ts
-│   │   └── useApi.ts
-│   │
-│   ├── services/
-│   │   └── api/
-│   │       ├── client.ts            # API client configuration
-│   │       ├── auth.ts              # Auth API calls
-│   │       ├── chat.ts              # Chat API calls
-│   │       └── documents.ts         # Document API calls
-│   │
-│   ├── types/
-│   │   └── api/
-│   │       └── index.ts             # Generated API types
-│   │
-│   ├── utils/
-│   │   ├── token.ts                 # JWT token utilities
-│   │   ├── validation.ts            # Form validation
-│   │   └── formatters.ts            # Data formatters
-│   │
-│   ├── context/
-│   │   ├── AuthContext.tsx
-│   │   ├── UIContext.tsx
-│   │   └── ChatUIContext.tsx
-│   │
-│   ├── constants/
-│   │   ├── api.ts                   # API constants
-│   │   ├── validation.ts            # Validation rules
-│   │   └── messages.ts              # User messages
-│   │
-│   ├── styles/
-│   │   ├── theme.ts                 # Styled components theme
-│   │   ├── global.ts                # Global styles
-│   │   └── colors.ts                # Color palette
-│   │
-│   └── lib/
-│       └── queryClient.ts           # React Query client
-│
-├── public/                          # Static assets
-│   ├── images/
-│   └── icons/
-│
-├── .env.example                     # Example env variables
-├── .env.local                       # Local env variables (not in git)
-├── .eslintrc.json
-├── .prettierrc.json
-├── .prettierignore
-├── next.config.js
-├── tsconfig.json
-├── package.json
-├── package-lock.json
-└── README.md
-```
-
-### 6.3 Create Directory Command
-
-```bash
-# All at once (Unix/Linux/MacOS)
-mkdir -p \
-  src/app \
-  src/components/{layouts,pages,common,forms} \
-  src/hooks \
-  src/services/api \
-  src/types/api \
-  src/utils \
-  src/context \
-  src/constants \
-  src/styles \
-  src/lib \
-  public/{images,icons}
-```
-
----
-
-## 7. Environment Variables Setup
-
-### 7.1 Create `.env.example`
+### 4.1 Create `.env.example`
 
 ```bash
 # API Configuration
@@ -406,7 +199,7 @@ NEXT_PUBLIC_ENABLE_DOCUMENT_PREVIEW=false
 NEXT_PUBLIC_DEBUG_MODE=false
 ```
 
-### 7.2 Create `.env.local`
+### 4.2 Create `.env.local`
 
 ```bash
 # Copy from .env.example and customize for local development
@@ -417,7 +210,7 @@ NEXT_PUBLIC_QDRANT_URL=http://localhost:6333
 NEXT_PUBLIC_ENABLE_STREAMING=true
 ```
 
-### 7.3 Create `.env.production`
+### 4.3 Create `.env.production`
 
 ```bash
 # Production environment
@@ -426,7 +219,7 @@ NEXT_PUBLIC_BACKEND_URL=https://api.yourdomain.com
 NEXT_PUBLIC_ENABLE_STREAMING=true
 ```
 
-### 7.4 Update `.gitignore`
+### 4.4 Update `.gitignore`
 
 ```bash
 # Add to existing .gitignore
@@ -462,9 +255,9 @@ Thumbs.db
 
 ---
 
-## 8. Next.js Configuration
+## 5. Next.js Configuration
 
-### 8.1 Update `next.config.js`
+### 5.1 Update `next.config.js`
 
 ```javascript
 /** @type {import('next').NextConfig} */
@@ -519,9 +312,9 @@ module.exports = nextConfig;
 
 ---
 
-## 9. Package.json Scripts
+## 6. Package.json Scripts
 
-### 9.1 Update `package.json` Scripts
+### 6.1 Update `package.json` Scripts
 
 ```json
 {
@@ -543,9 +336,9 @@ module.exports = nextConfig;
 
 ---
 
-## 10. Initial Git Setup
+## 7. Initial Git Setup
 
-### 10.1 Initialize Git Repository
+### 7.1 Initialize Git Repository
 
 ```bash
 git init
@@ -561,15 +354,12 @@ git commit -m "chore: Initial Next.js 16 + React 19 project setup
 
 ---
 
-## 11. Verification Checklist
+## 8. Verification Checklist
 
 - [ ] Next.js 16 project created
 - [ ] All dependencies installed (npm install completes without errors)
 - [ ] TypeScript strict mode enabled in tsconfig.json
 - [ ] Path aliases configured (@/*, @components/*, etc.)
-- [ ] ESLint configured and passes (npm run lint)
-- [ ] Prettier configured and can format files
-- [ ] All folder directories created
 - [ ] .env.example and .env.local created
 - [ ] next.config.js configured
 - [ ] package.json scripts configured
@@ -579,9 +369,9 @@ git commit -m "chore: Initial Next.js 16 + React 19 project setup
 
 ---
 
-## 12. Run Development Server
+## 9. Run Development Server
 
-### 12.1 Start Development Server
+### 9.1 Start Development Server
 
 ```bash
 npm run dev
@@ -595,7 +385,7 @@ Expected output:
   - Local:        http://localhost:3000
 ```
 
-### 12.2 Test the Server
+### 9.2 Test the Server
 
 1. Open http://localhost:3000 in browser
 2. Should see Next.js default page or redirect
@@ -604,7 +394,7 @@ Expected output:
 
 ---
 
-## 13. Troubleshooting
+## 10. Troubleshooting
 
 ### Issue: "Cannot find module 'react'"
 **Solution:** Run `npm install` to ensure all dependencies are installed
@@ -624,12 +414,6 @@ npm install next@16.0.3
 - Press Ctrl+Shift+P (Cmd+Shift+P on Mac)
 - Type "TypeScript: Restart TS Server"
 
-### Issue: ESLint failing with "Cannot find module @typescript-eslint"
-**Solution:** Install ESLint dependencies
-```bash
-npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
-```
-
 ### Issue: `.env.local` not being read
 **Solution:**
 1. Restart dev server after creating .env.local
@@ -638,13 +422,12 @@ npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugi
 
 ---
 
-## 14. Next Steps
+## 11. Next Steps
 
 After completing this step:
 1. ✅ Verify `npm run dev` works without errors
-2. ✅ Verify `npm run lint` passes
-3. ✅ Verify `npm run type-check` passes
-4. → Proceed to **STEP-02-api-client.md**
+2. ✅ Verify `npm run type-check` passes
+3. → Proceed to **STEP-02-api-client.md**
 
 ---
 
@@ -653,5 +436,4 @@ After completing this step:
 - [Next.js 16 Documentation](https://nextjs.org/docs)
 - [React 19 Documentation](https://react.dev/)
 - [TypeScript Configuration](https://www.typescriptlang.org/tsconfig)
-- [ESLint Configuration](https://eslint.org/docs/rules/)
-- [Prettier Configuration](https://prettier.io/docs/en/options.html)
+- [Next.js App Router](https://nextjs.org/docs/app)
