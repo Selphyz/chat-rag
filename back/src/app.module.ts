@@ -1,4 +1,10 @@
-import { Module, MiddlewareConsumer, NestModule, ValidationPipe } from '@nestjs/common';
+import {
+  Module,
+  MiddlewareConsumer,
+  NestModule,
+  RequestMethod,
+  ValidationPipe,
+} from '@nestjs/common';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +17,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { OllamaModule } from './modules/ollama/ollama.module';
+import { QdrantModule } from './modules/qdrant/qdrant.module';
 
 @Module({
   imports: [
@@ -36,6 +44,9 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: configService.get('nodeEnv') === 'development',
           logging: false,
+          retryAttempts: 10,
+          retryDelay: 3000,
+          connectTimeoutMS: 10000,
         };
       },
       inject: [ConfigService],
@@ -43,6 +54,8 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     AuthModule,
     ChatModule,
     DocumentsModule,
+    OllamaModule,
+    QdrantModule,
   ],
   controllers: [AppController],
   providers: [
@@ -64,6 +77,8 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(HttpLoggerMiddleware).forRoutes('*');
+    consumer
+      .apply(HttpLoggerMiddleware)
+      .forRoutes({ path: '*path', method: RequestMethod.ALL });
   }
 }

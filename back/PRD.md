@@ -76,8 +76,8 @@ Create a backend service that enables users to:
 └──────┬──────┘
        │ HTTP/REST
        ▼
-┌─────────────────────────────────────┐
-│         NestJS Backend              │
+┌────────────────────────────────────┐
+│         NestJS Backend             │
 │  ┌────────────────────────────┐    │
 │  │  Auth Module (JWT)         │    │
 │  ├────────────────────────────┤    │

@@ -40,6 +40,7 @@ async function bootstrap() {
     .addTag('Chat', 'Chat session and message management')
     .addTag('Documents', 'Document upload and processing')
     .addTag('Health', 'Health check endpoints')
+    .addTag('Qdrant', 'Qdrant vector diagnostics and utilities')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
