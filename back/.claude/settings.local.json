@@ -33,6 +33,17 @@
         "hooks": [
           {
             "type": "command",
+            "command": "aplay .claude/overtime.wav 2>/dev/null || paplay .claude/overtime.wav 2>/dev/null || ffplay -nodisp -autoexit .claude/overtime.wav 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
             "command": "aplay .claude/pause.wav 2>/dev/null || paplay .claude/pause.wav 2>/dev/null || ffplay -nodisp -autoexit .claude/pause.wav 2>/dev/null || true"
           }
         ]
